@@ -401,8 +401,11 @@ class Project(_ProjectBase):
         deployment_map: Dict = {}
         map_path = self._build_path.joinpath("deployments/map.json")
         if map_path.exists():
-            with map_path.open("r") as fp:
-                deployment_map = json.load(fp)
+            try:
+                with map_path.open("r") as fp:
+                    deployment_map = json.load(fp)
+            except json.JSONDecodeError as e:
+                print(f"JSONDecodeError while loading deployment maps: {e}")
         return deployment_map
 
     def _save_deployment_map(self, deployment_map: Dict) -> None:
